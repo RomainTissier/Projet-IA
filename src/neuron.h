@@ -1,3 +1,11 @@
+/**
+ * File : 	neuron.h
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
 #ifndef NEURON_H
 #define NEURON_H
 #include "link.h"

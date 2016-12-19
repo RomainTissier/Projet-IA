@@ -1,3 +1,11 @@
+/**
+ * File : 	network.h
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
 #ifndef NETWORK_H
 #define NETWORK_H
 

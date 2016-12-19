@@ -1,3 +1,11 @@
+/**
+ * File : 	link.c
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
 #include "link.h"
 #include <stdlib.h>
 #include <time.h>

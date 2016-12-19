@@ -1,3 +1,12 @@
+/**
+ * File : 	test.h
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
+
 #ifndef TEST_H
 #define TEST_H
 

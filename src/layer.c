@@ -1,89 +1,143 @@
+/**
+ * File : 	layer.c
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
+
 #include "layer.h"
 #include <stdlib.h>
 #include <math.h>
 
-Layer *layer_create(unsigned int size, Layer *previous){
-	
+/**
+ * Constructor of layer object 
+ * 	Param : 
+ *		size : number of neuron in the layer
+ *		previous : pointer to the previous layer(NULL if input layer)
+ */
+Layer *layer_create(unsigned int size, Layer * previous)
+{
+
 	// Create the layer object
 	Layer *layer = malloc(sizeof(Layer));
-	layer->size=size;
-	layer->previous=previous;
+	layer->size = size;
 
-	// Create the neuron list
-	layer->neurons_list=malloc(size*sizeof(Neuron*));
-	unsigned int n_layer;	
-	for(n_layer=0;n_layer<size;n_layer++)
-		layer->neurons_list[n_layer]=neuron_create();
-	
-	// Si la couche précédente n'est pas nul
-	if(previous != NULL){
-		
-		// On lie la couche précédente à la courante
-		previous->next=layer;
+	// Create the neurons list
+	layer->neurons_list = malloc(size * sizeof(Neuron *));
+	unsigned int n_layer;
+	for (n_layer = 0; n_layer < size; n_layer++)
+		layer->neurons_list[n_layer] = neuron_create();
 
-		// On créer la couche output précédente:
+	// Update relation with the previous layer
+	if (previous != NULL) {
+
+		// Link the current layer with the previous layer
+		layer->previous = previous;
+		previous->next = layer;
+
+		// Update the previous layer outputs list
 		unsigned int n_previous;
-		for(n_previous=0;n_previous<previous->size;n_previous++)
-			previous->neurons_list[n_previous]->outputs_list=malloc(layer->size*sizeof(Link*));
-		
-		// On itére sur le neuronnes de la couche courante 
-		for(n_layer=0;n_layer<size;n_layer++){
+		for (n_previous = 0; n_previous < previous->size; n_previous++)
+			previous->neurons_list[n_previous]->outputs_list =
+			    malloc(layer->size * sizeof(Link *));
 
-			// On créer une liste d'entrée pour le neuronne i de la couche courante. 
-			layer->neurons_list[n_layer]->inputs_list=malloc(previous->size*sizeof(Link*));
-			
-			// Pour chacun des neuronne de la couche précédente			
-			for(n_previous=0;n_previous<previous->size;n_previous++){
-				
-				// On créer le lien
-				Link *new_link=link_create();
-				new_link->origin=previous->neurons_list[n_previous];//Neuronne J couche précédente
-				new_link->destination=layer->neurons_list[n_layer];// Neuronne i cournat
-				
-				// On l'ajoute aux inputs courante: 
-				layer->neurons_list[n_layer]->inputs_list[n_previous]=new_link;
+		// Loop over the newly created neurons in the current layer 
+		for (n_layer = 0; n_layer < size; n_layer++) {
 
-				// et aux outputs du précédent
-				previous->neurons_list[n_previous]->outputs_list[n_layer]=new_link;
+			// Create inputs list for the current neurons
+			layer->neurons_list[n_layer]->inputs_list =
+			    malloc(previous->size * sizeof(Link *));
+
+			// Loop over previous layer neurons to update outputs 
+			// links int the same times of current inputs links                     
+			for (n_previous = 0; n_previous < previous->size;
+			     n_previous++) {
+
+				// Create a new link and specify its origin and 
+				// destination neurons
+				Link *new_link = link_create();
+				new_link->origin =
+				    previous->neurons_list[n_previous];
+				new_link->destination =
+				    layer->neurons_list[n_layer];
+
+				// Add this link to the input
+				// of the current neurons
+				layer->neurons_list[n_layer]->
+				    inputs_list[n_previous] = new_link;
+
+				// Add this link to the previous layer neurons
+				// output list
+				previous->neurons_list[n_previous]->
+				    outputs_list[n_layer] = new_link;
 			}
 		}
-	} 
+	}
 	return layer;
 }
 
-void layer_compute_values(Layer *layer){
-	unsigned int previous_size=layer->previous->size;
+/* 
+ * Function computing neurons values of the layer
+ *	Param : 
+ *		layer : current layer
+ */
+void layer_compute_values(Layer * layer)
+{
+
+	// Declare some loop variables
 	unsigned int n_layer;
 	unsigned int n_previous;
-	double res;
+	double sum;
 	Neuron *n;
-	for(n_layer=0;n_layer<layer->size;n_layer++){
-		n= layer->neurons_list[n_layer];
-		res=0;
 
-		// Sommation entrée et poids
-		for(n_previous=0;n_previous<previous_size;n_previous++){
-			res+=n->inputs_list[n_previous]->weight*n->inputs_list[n_previous]->origin->value;
-		}	
-		
-		// Fonction activation sigmoïde 1/(1+exp(-x))
-		res=1/(1+exp(-res));
-		n->value=res;
+	// Save the size of the previous layer
+	unsigned int previous_size = layer->previous->size;
+
+	// Loop over the neurons of the current layer
+	for (n_layer = 0; n_layer < layer->size; n_layer++) {
+
+		// Point to the current neurons
+		n = layer->neurons_list[n_layer];
+
+		// Sum the inputs values and theirs weight
+		sum = 0;
+		for (n_previous = 0; n_previous < previous_size; n_previous++)
+			sum +=
+			    n->inputs_list[n_previous]->weight *
+			    n->inputs_list[n_previous]->origin->value;
+
+		// Apply the sigmoid activation function on the sum 
+		// and affect it to the neurons value
+		n->value = 1 / (1 + exp(-sum));
 	}
 }
 
-void layer_destroy(Layer *layer){
-	if(layer->previous != NULL)
-		layer->previous->next=NULL;
-	if(layer->next !=NULL)
-		layer->next->previous=NULL;
+/*
+ * Desctructor of layer object
+ *	Param : 
+ *		layer : layer object to destroy
+ */
+void layer_destroy(Layer * layer)
+{
 
-	// On free la liste de neuronne
+	// Dereference pointer to this layer
+	if (layer->previous != NULL)
+		layer->previous->next = NULL;
+	if (layer->next != NULL)
+		layer->next->previous = NULL;
+
+	// TODO Free links
+
+	// Free each neurons in the layer
 	unsigned int i;
-	for(i=0;i<layer->size;i++){
-		//TODO : clean links
+	for (i = 0; i < layer->size; i++)
 		neuron_destroy(layer->neurons_list[i]);
-	}
-	free(layer->neurons_list); 
+
+	// Free the neuron list
+	free(layer->neurons_list);
+
+	// Obviously, free the layer 
 	free(layer);
 }

@@ -1,3 +1,12 @@
+/**
+ * File : 	test.c
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
+
 #include "test.h"
 #include "link.h"
 #include "neuron.h"

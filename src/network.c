@@ -1,3 +1,12 @@
+/**
+ * File : 	network.c
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
+
 #include "network.h"
 #include <stdlib.h>
 

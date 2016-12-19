@@ -1,3 +1,12 @@
+/**
+ * File : 	link.h
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
+
 #ifndef LINK_H
 #define LINK_H
 

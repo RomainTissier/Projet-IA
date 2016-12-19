@@ -1,3 +1,11 @@
+/**
+ * File : 	neuron.c
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
 #include "neuron.h"
 #include <stdlib.h>
 

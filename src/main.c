@@ -1,3 +1,11 @@
+/**
+ * File : 	main.c
+ * 		
+ * Authors :
+ *		Cuartero Jean-Louis
+ * 		Delpech Marc	
+ * 		Tissier Romain
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
