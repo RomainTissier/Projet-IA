@@ -1,6 +1,8 @@
 /**
  * File : 	layer.h
- * 		
+ * 
+ * Description : Contain layer structure and related functions
+ *		
  * Authors :
  *		Cuartero Jean-Louis
  * 		Delpech Marc	

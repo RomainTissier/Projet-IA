@@ -1,20 +1,34 @@
 /**
  * File : 	main.c
- * 		
+ * 
+ * Description : Entry point of the program
+ *		
  * Authors :
  *		Cuartero Jean-Louis
  * 		Delpech Marc	
  * 		Tissier Romain
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "test.h"
 
-//TODO int main(int argc, char *argv[])
-int main(){
+/**
+ * Entry point of the program
+ */
+int main()
+{
+
+	//TODO int main(int argc, char *argv[]) to include params
+
+	// Initialise random function
 	srand(time(NULL));
+
+	// Example running test tools
 	test_all();
-	return EXIT_SUCCESS; 
+
+	// Return success to the shell
+	return EXIT_SUCCESS;
 }

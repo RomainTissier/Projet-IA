@@ -1,6 +1,8 @@
 /**
  * File : 	link.h
- * 		
+ * 
+ * Description : Contain link structure and related functions
+ *		
  * Authors :
  *		Cuartero Jean-Louis
  * 		Delpech Marc	
@@ -10,16 +12,29 @@
 #ifndef LINK_H
 #define LINK_H
 
-struct neuron;  
+// Reference use for cross/compilation
+struct neuron;
 
-typedef struct link{
-	double weight; 
+/**
+ * Structure representing a link between two neurons
+ */
+typedef struct link {
+	double weight;
 	struct neuron *origin;
-	struct neuron *destination; 
-}Link;
+	struct neuron *destination;
+} Link;
 
+/*
+ * Constructor initialising a link object
+ *
+ */
 Link *link_create();
 
-void link_destroy(Link *link);
+/**
+ * Destructor for link object
+ *	Param :
+ *		link : link to destroy 
+ */
+void link_destroy(Link * link);
 
-#endif 
+#endif

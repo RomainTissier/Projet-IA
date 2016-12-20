@@ -1,6 +1,8 @@
 /**
  * File : 	test.h
  * 		
+ * Description : Contain some unit test for our neural network
+ *
  * Authors :
  *		Cuartero Jean-Louis
  * 		Delpech Marc	

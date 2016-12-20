@@ -1,6 +1,8 @@
 /**
  * File : 	neuron.c
- * 		
+ * 	
+ * Description : Contain the neuron structure and related functions
+ *		
  * Authors :
  *		Cuartero Jean-Louis
  * 		Delpech Marc	
@@ -9,15 +11,24 @@
 #include "neuron.h"
 #include <stdlib.h>
 
-Neuron *neuron_create(){
-	Neuron *neuron= malloc(sizeof(Neuron));
-	neuron->value=0;
-	neuron->gradient=0;
+/**
+ * Constructor creating an empty neuron object
+ */
+Neuron *neuron_create()
+{
+	Neuron *neuron = malloc(sizeof(Neuron));
+	neuron->value = 0;
+	neuron->gradient = 0;
 	return neuron;
 }
 
-void neuron_destroy(Neuron *neuron){
-	//TODO si elle existent: free des listes entrées et sortie
-	// TODO free dans un seul des sens les liens. 
+/**
+ * Destructor for a neuron object
+ *	Param : 
+ *		neuron : neuron object to destroy
+ */
+void neuron_destroy(Neuron * neuron)
+{
+	// TODO free cross referenced links
 	free(neuron);
 }
