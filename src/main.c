@@ -22,30 +22,34 @@
  */
 int main(int argc, char *argv[])
 {
-	if (argc < 3) {
-		printf("use: ./launch <learning_coeficient> <training.csv>\n");
+	
+	// Check params
+	if (argc < 4) {
+		printf("use: ./launch <learning_coeficient> <training.csv> <size hidden layer 1> <size hidden layer 2> [...] <size hidden layer n>\n");
 		printf
 		    ("\t* <learning_coeficient> is the learning coeficient use by backpropagation\n");
-		printf("\t* <training.csv> is the training file");
+		printf("\t* <training.csv> is the training file\n");
+		printf("\t* <size layer n> is the number of neurons of the hidden layer n\n");
 		return EXIT_FAILURE;
 	}
+
 	// Initialise random function
 	srand(time(NULL));
 
-	// Example running test tools
-	//test_all();
+	int nb_layer=argc-3;
+	unsigned int couches[nb_layer];
+	int i;
+	for(i=0;i<nb_layer;i++)
+		couches[i]=atoi(argv[3+i]);
 
+	// Parse the learning coeficient
 	double learning_coeficient = strtod(argv[1], NULL);
 
 	// Load dataset
 	EventList *dataset = load_dataset(argv[2]);
-	printf("Size: %lu\n", dataset->size);
+	Network *network = network_create(nb_layer, couches, 30, 1);
 
-	// TODO changer les couches et taux d'apprentissage
-	unsigned int couches[3] = { 30, 30, 30 };
-	Network *network = network_create(3, couches, 30, 1);
-
-	int i;
+	// Load inputs from event and train the network
 	double inputs[30];
 	double outputs[1];
 	for (i = 0; i < 200000; i++) {
@@ -85,6 +89,8 @@ int main(int argc, char *argv[])
 		network_train(network, inputs, outputs, learning_coeficient);
 		eventlist_remove(dataset, dataset->first);
 	}
+
+	// Load and check the model 
 	unsigned long TP = 0, TN = 0, FP = 0, FN = 0;
 	unsigned long inf_zero = 0, sup_one = 0, quart_one = 0, quart_two =
 	    0, quart_three = 0, quart_four = 0;
@@ -121,19 +127,20 @@ int main(int argc, char *argv[])
 		inputs[28] = elmt->event->PRI_jet_subleading_phi;
 		inputs[29] = elmt->event->PRI_jet_all_pt;
 
+		// Run the network and get the output value
 		network_run(network, inputs);
 		double seuil = 0.5;
 		double output = network->output->neurons_list[0]->value;
-		if (output >= seuil && elmt->event->interest == 1) {
-			TP++;
-		} else if (output >= seuil && elmt->event->interest == 0) {
-			FP++;
-		} else if (output < seuil && elmt->event->interest == 0) {
-			TN++;
-		} else if (output < seuil && elmt->event->interest == 1) {
-			FN++;
-		}
 
+		// Update indicators
+		if (output >= seuil && elmt->event->interest == 1) 
+			TP++;
+		else if (output >= seuil && elmt->event->interest == 0) 
+			FP++;
+		 else if (output < seuil && elmt->event->interest == 0) 
+			TN++;
+		 else if (output < seuil && elmt->event->interest == 1) 
+			FN++;
 		if (output < 0)
 			inf_zero++;
 		if (output > 1)
@@ -149,18 +156,15 @@ int main(int argc, char *argv[])
 
 		eventlist_remove(dataset, dataset->first);
 	}
-	printf("Ouput histogram:\n");
-	printf("[-inf;0[ => %lu\n", inf_zero);
-	printf("[0;0.25[ => %lu\n", quart_one);
-	printf("[0.25;0.5[ => %lu\n", quart_two);
-	printf("[0.5;0.75[ => %lu\n", quart_three);
-	printf("[0.75;1] => %lu\n", quart_four);
-	printf("]1;+inf[ => %lu\n", sup_one);
-	printf("\n");
-
-	printf("Learning: TP=%lu TN=%lu FP=%lu FN=%lu\n", TP, TN, FP, FN);
-
-	printf("Would you save this experiment in json?\n");
+	printf("* Ouput histogram:\n");
+	printf("\t[-inf;0[ => %lu\n", inf_zero);
+	printf("\t[0;0.25[ => %lu\n", quart_one);
+	printf("\t[0.25;0.5[ => %lu\n", quart_two);
+	printf("\t[0.5;0.75[ => %lu\n", quart_three);
+	printf("\t[0.75;1] => %lu\n", quart_four);
+	printf("\t]1;+inf[ => %lu\n", sup_one);
+	printf("* Learning: TP=%lu TN=%lu FP=%lu FN=%lu\n", TP, TN, FP, FN);
+	printf("* Would you save this experiment in json?\n");
 	char res;
 	scanf("%c", &res);
 	if (res == 'y' || res == 'Y')

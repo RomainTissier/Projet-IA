@@ -19,8 +19,8 @@
 Link *link_create()
 {
 	Link *link = malloc(sizeof(Link));
-	link->weight = ((double)rand() / (double)RAND_MAX) - 0.5;
-	link->weight = link->weight * 2;
+	link->weight = ((double)rand() / (double)RAND_MAX)-0.5;
+	link->weight = link->weight*2;
 	return link;
 }
 
