@@ -12,6 +12,7 @@
 #define NETWORK_H
 
 #include "layer.h"
+#include <stdio.h>
 
 /**
  * Structure representing a network object
@@ -60,5 +61,17 @@ void network_run(Network * network, double inputs[]);
  */
 void network_train(Network * network, double inputs[],
 		   double expected_outputs[], double learning_coeficient);
+
+/**
+ *	Function saving the current network into a JSON file
+ *		Param :
+ *			network : network to work
+ *			TP : number of true positive
+ *			TN : number of true negative
+ *			FP : number of false positive
+ *			FN : number of false negative
+ */
+void network_to_json(Network * network, unsigned long TP, unsigned long TN,
+		     unsigned long FP, unsigned long FN);
 
 #endif

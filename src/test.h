@@ -17,4 +17,5 @@ void test_link();
 void test_neuron();
 void test_layer();
 void test_network();
+void test_eventlist();
 #endif

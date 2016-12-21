@@ -67,14 +67,12 @@ Layer *layer_create(unsigned int size, Layer * previous)
 
 				// Add this link to the input
 				// of the current neurons
-				layer->
-				    neurons_list[n_layer]->inputs_list
+				layer->neurons_list[n_layer]->inputs_list
 				    [n_previous] = new_link;
 
 				// Add this link to the previous layer neurons
 				// output list
-				previous->
-				    neurons_list[n_previous]->outputs_list
+				previous->neurons_list[n_previous]->outputs_list
 				    [n_layer] = new_link;
 			}
 		}

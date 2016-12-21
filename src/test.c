@@ -14,7 +14,9 @@
 #include "neuron.h"
 #include "layer.h"
 #include "network.h"
+#include "eventlist.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void test_all()
 {
@@ -22,6 +24,7 @@ void test_all()
 	test_neuron();
 	test_layer();
 	test_network();
+	test_eventlist();
 }
 
 void test_link()
@@ -90,4 +93,42 @@ void test_network()
 	network_run(network, input1);
 	printf("[TEST] train: %f %f\n", network->output->neurons_list[0]->value,
 	       network->output->neurons_list[1]->value);
+}
+
+void test_eventlist()
+{
+
+	EventList *eventlist = eventlist_create();
+
+	Event *e1 = malloc(sizeof(Event));
+	Event *e2 = malloc(sizeof(Event));
+	Event *e3 = malloc(sizeof(Event));
+	Event *e4 = malloc(sizeof(Event));
+	Event *e5 = malloc(sizeof(Event));
+	Event *e6 = malloc(sizeof(Event));
+	Event *e7 = malloc(sizeof(Event));
+	e1->interest = 'R';
+	e2->interest = 'O';
+	e3->interest = 'M';
+	e4->interest = 'M';
+	e5->interest = 'A';
+	e6->interest = 'I';
+	e7->interest = 'N';
+
+	eventlist_add(eventlist, e1);
+	eventlist_add(eventlist, e2);
+	eventlist_add(eventlist, e3);
+	eventlist_add(eventlist, e4);
+	eventlist_add(eventlist, e5);
+	eventlist_add(eventlist, e6);
+	eventlist_add(eventlist, e7);
+
+	printf("[TEST] list l: %lu\n", eventlist->size);
+	eventlist_remove(eventlist, eventlist_get(eventlist, 3));
+	printf("[TEST] list l2: %lu\n", eventlist->size);
+	unsigned long i;
+	for (i = 0; i < eventlist->size; i++) {
+		EventListElement *el = eventlist_get(eventlist, i);
+		printf("[TEST] l2[%lu]: %c\n", i, el->event->interest);
+	}
 }

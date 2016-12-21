@@ -84,8 +84,9 @@ void network_run(Network * network, double inputs[])
  *		expected_outputs : wanted outputs (supervised learning)
  *		learning_coeficient : learning coeficient to apply
  */
-void network_train(Network * network, double inputs[],
-		   double expected_outputs[], double learning_coeficient)
+void
+network_train(Network * network, double inputs[],
+	      double expected_outputs[], double learning_coeficient)
 {
 
 	// Run the network with the new set of values
@@ -168,4 +169,72 @@ void network_destroy(Network * network)
 {
 	// TODO free layer by layer
 	free(network);
+}
+
+/**
+ *	Function saving the current network into a JSON file
+ *		Param :
+ *			network : network to work
+ *			TP : number of true positive
+ *			TN : number of true negative
+ *			FP : number of false positive
+ *			FN : number of false negative
+ */
+void
+network_to_json(Network * network, unsigned long TP, unsigned long TN,
+		unsigned long FP, unsigned long FN)
+{
+
+	// Create a new output file (erase the previous)
+	FILE *jsonFile = fopen("jsonOutput.json", "w");
+
+	fprintf(jsonFile, "{\n");
+
+	// Write confusion matrix       
+	fprintf(jsonFile, "\tTP:\"%lu\"\n", TP);
+	fprintf(jsonFile, "\tTN:\"%lu\"\n", TN);
+	fprintf(jsonFile, "\tFP:\"%lu\"\n", FP);
+	fprintf(jsonFile, "\tFN:\"%lu\"\n", FN);
+
+	// Write layers list
+	fprintf(jsonFile, "\tlayers:[\n");
+	Layer *currentLayer = network->input->next;
+	unsigned int i, j;
+	while (currentLayer->next != NULL) {
+
+		// Write layer by layer
+		fprintf(jsonFile, "\t\tlayer:{\n");
+		for (i = 0; i < currentLayer->size; i++) {
+
+			// Write neuron by neuron
+			fprintf(jsonFile, "\t\t\tneuron:{\n");
+			fprintf(jsonFile, "\t\t\t\tinputs:[\n");
+
+			// Write current neuron inputs weights
+			for (j = 0; j < currentLayer->previous->size; j++)
+				fprintf(jsonFile, "\t\t\t\t\t\"%f\"\n",
+					currentLayer->neurons_list[i]->
+					inputs_list[j]->weight);
+
+			fprintf(jsonFile, "\t\t\t\t]\n");
+			fprintf(jsonFile, "\t\t\t\toutputs:[\n");
+
+			// Write current neuron outputs weights
+			for (j = 0; j < currentLayer->next->size; j++)
+				fprintf(jsonFile, "\t\t\t\t\t\"%f\"\n",
+					currentLayer->neurons_list[i]->
+					outputs_list[j]->weight);
+
+			fprintf(jsonFile, "\t\t\t\t]\n");
+			fprintf(jsonFile, "\t\t\t}\n");
+		}
+		fprintf(jsonFile, "\t\t}\n");
+		currentLayer = currentLayer->next;
+	}
+
+	fprintf(jsonFile, "\t]\n");
+	fprintf(jsonFile, "}\n");
+
+	// Close the output file
+	fclose(jsonFile);
 }
