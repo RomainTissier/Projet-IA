@@ -81,7 +81,7 @@ public class BosonNetwork extends Network {
 			if (output >= seuil && colisionEvent.getInterest() == true)
 				bosonEvaluation.incrementTruePositive();
 			else if (output >= seuil && colisionEvent.getInterest() == false)
-				bosonEvaluation.incrementFalseNegative();
+				bosonEvaluation.incrementFalsePositive();
 			else if (output < seuil && colisionEvent.getInterest() == false)
 				bosonEvaluation.incrementTrueNegative();
 			else if (output < seuil && colisionEvent.getInterest() == true)
