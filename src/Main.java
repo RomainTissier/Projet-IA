@@ -41,6 +41,12 @@ public class Main {
 		ArrayList<ColisionEvent> test = cel.getRandomDataSet(50000, training);
 		System.out.println("[OK]");
 
+		// NORMALIZE DATA
+		System.out.print("Normalizing data...");
+		ColisionEvent coef = normalize(training);
+		normalize(test, coef);
+		System.out.println("[OK]");
+
 		// Parse argument
 		ArrayList<Integer> layerSizes = new ArrayList<Integer>();
 		for (int i = 3; i < args.length; i++) {
@@ -77,5 +83,191 @@ public class Main {
 			bosonNetwork.toJSON(new File(ans), testEvaluation);
 		}
 		sc.close();
+	}
+
+	public static ColisionEvent normalize(ArrayList<ColisionEvent> training) {
+		ColisionEvent coeficient = new ColisionEvent();
+		coeficient.setDER_mass_MMC(0.0);
+		coeficient.setDER_mass_transverse_met_lep(0.0);
+		coeficient.setDER_mass_vis(0.0);
+		coeficient.setDER_pt_h(0.0);
+		coeficient.setDER_deltaeta_jet_jet(0.0);
+		coeficient.setDER_mass_jet_jet(0.0);
+		coeficient.setDER_prodeta_jet_jet(0.0);
+		coeficient.setDER_deltar_tau_lep(0.0);
+		coeficient.setDER_pt_tot(0.0);
+		coeficient.setDER_sum_pt(0.0);
+		coeficient.setDER_pt_ratio_lep_tau(0.0);
+		coeficient.setDER_met_phi_centrality(0.0);
+		coeficient.setDER_lep_eta_centrality(0.0);
+		coeficient.setPRI_tau_pt(0.0);
+		coeficient.setPRI_tau_eta(0.0);
+		coeficient.setPRI_tau_phi(0.0);
+		coeficient.setPRI_lep_pt(0.0);
+		coeficient.setPRI_lep_eta(0.0);
+		coeficient.setPRI_lep_phi(0.0);
+		coeficient.setPRI_met(0.0);
+		coeficient.setPRI_met_phi(0.0);
+		coeficient.setPRI_met_sumet(0.0);
+		coeficient.setPRI_jet_num(0.0);
+		coeficient.setPRI_jet_leading_pt(0.0);
+		coeficient.setPRI_jet_leading_eta(0.0);
+		coeficient.setPRI_jet_leading_phi(0.0);
+		coeficient.setPRI_jet_subleading_pt(0.0);
+		coeficient.setPRI_jet_subleading_eta(0.0);
+		coeficient.setPRI_jet_subleading_phi(0.0);
+		coeficient.setPRI_jet_all_pt(0.0);
+
+		for (ColisionEvent ce : training) {
+			if (coeficient.getDER_mass_MMC() < Math.abs(ce.getDER_mass_MMC()))
+				coeficient.setDER_mass_MMC(Math.abs(ce.getDER_mass_MMC()));
+			if (coeficient.getDER_mass_transverse_met_lep() < Math.abs(ce
+					.getDER_mass_transverse_met_lep()))
+				coeficient.setDER_mass_transverse_met_lep(Math.abs(ce
+						.getDER_mass_transverse_met_lep()));
+			if (coeficient.getDER_mass_vis() < Math.abs(ce.getDER_mass_vis()))
+				coeficient.setDER_mass_vis(Math.abs(ce.getDER_mass_vis()));
+			if (coeficient.getDER_pt_h() < Math.abs(ce.getDER_pt_h()))
+				coeficient.setDER_pt_h(Math.abs(ce.getDER_pt_h()));
+			if (coeficient.getDER_deltaeta_jet_jet() < Math.abs(ce
+					.getDER_deltaeta_jet_jet()))
+				coeficient.setDER_deltaeta_jet_jet(Math.abs(ce
+						.getDER_deltaeta_jet_jet()));
+			if (coeficient.getDER_mass_jet_jet() < Math.abs(ce
+					.getDER_mass_jet_jet()))
+				coeficient.setDER_mass_jet_jet(Math.abs(ce
+						.getDER_mass_jet_jet()));
+			if (coeficient.getDER_prodeta_jet_jet() < Math.abs(ce
+					.getDER_prodeta_jet_jet()))
+				coeficient.setDER_prodeta_jet_jet(Math.abs(ce
+						.getDER_prodeta_jet_jet()));
+			if (coeficient.getDER_deltar_tau_lep() < Math.abs(ce
+					.getDER_deltar_tau_lep()))
+				coeficient.setDER_deltar_tau_lep(Math.abs(ce
+						.getDER_deltar_tau_lep()));
+			if (coeficient.getDER_pt_tot() < Math.abs(ce.getDER_pt_tot()))
+				coeficient.setDER_pt_tot(Math.abs(ce.getDER_pt_tot()));
+			if (coeficient.getDER_sum_pt() < Math.abs(ce.getDER_sum_pt()))
+				coeficient.setDER_sum_pt(Math.abs(ce.getDER_sum_pt()));
+			if (coeficient.getDER_pt_ratio_lep_tau() < Math.abs(ce
+					.getDER_pt_ratio_lep_tau()))
+				coeficient.setDER_pt_ratio_lep_tau(Math.abs(ce
+						.getDER_pt_ratio_lep_tau()));
+			if (coeficient.getDER_met_phi_centrality() < Math.abs(ce
+					.getDER_met_phi_centrality()))
+				coeficient.setDER_met_phi_centrality(Math.abs(ce
+						.getDER_met_phi_centrality()));
+			if (coeficient.getDER_lep_eta_centrality() < Math.abs(ce
+					.getDER_lep_eta_centrality()))
+				coeficient.setDER_lep_eta_centrality(Math.abs(ce
+						.getDER_lep_eta_centrality()));
+			if (coeficient.getPRI_tau_pt() < Math.abs(ce.getPRI_tau_pt()))
+				coeficient.setPRI_tau_pt(Math.abs(ce.getPRI_tau_pt()));
+			if (coeficient.getPRI_tau_eta() < Math.abs(ce.getPRI_tau_eta()))
+				coeficient.setPRI_tau_eta(Math.abs(ce.getPRI_tau_eta()));
+			if (coeficient.getPRI_tau_phi() < Math.abs(ce.getPRI_tau_phi()))
+				coeficient.setPRI_tau_phi(Math.abs(ce.getPRI_tau_phi()));
+			if (coeficient.getPRI_lep_pt() < Math.abs(ce.getPRI_lep_pt()))
+				coeficient.setPRI_lep_pt(Math.abs(ce.getPRI_lep_pt()));
+			if (coeficient.getPRI_lep_eta() < Math.abs(ce.getPRI_lep_eta()))
+				coeficient.setPRI_lep_eta(Math.abs(ce.getPRI_lep_eta()));
+			if (coeficient.getPRI_lep_phi() < Math.abs(ce.getPRI_lep_phi()))
+				coeficient.setPRI_lep_phi(Math.abs(ce.getPRI_lep_phi()));
+			if (coeficient.getPRI_met() < Math.abs(ce.getPRI_met()))
+				coeficient.setPRI_met(Math.abs(ce.getPRI_met()));
+			if (coeficient.getPRI_met_phi() < Math.abs(ce.getPRI_met_phi()))
+				coeficient.setPRI_met_phi(Math.abs(ce.getPRI_met_phi()));
+			if (coeficient.getPRI_met_sumet() < Math.abs(ce.getPRI_met_sumet()))
+				coeficient.setPRI_met_sumet(Math.abs(ce.getPRI_met_sumet()));
+			if (coeficient.getPRI_jet_num() < Math.abs(ce.getPRI_jet_num()))
+				coeficient.setPRI_jet_num(Math.abs(ce.getPRI_jet_num()));
+			if (coeficient.getPRI_jet_leading_pt() < Math.abs(ce
+					.getPRI_jet_leading_pt()))
+				coeficient.setPRI_jet_leading_pt(Math.abs(ce
+						.getPRI_jet_leading_pt()));
+			if (coeficient.getPRI_jet_leading_eta() < Math.abs(ce
+					.getPRI_jet_leading_eta()))
+				coeficient.setPRI_jet_leading_eta(Math.abs(ce
+						.getPRI_jet_leading_eta()));
+			if (coeficient.getPRI_jet_leading_phi() < Math.abs(ce
+					.getPRI_jet_leading_phi()))
+				coeficient.setPRI_jet_leading_phi(Math.abs(ce
+						.getPRI_jet_leading_phi()));
+			if (coeficient.getPRI_jet_subleading_pt() < Math.abs(ce
+					.getPRI_jet_subleading_pt()))
+				coeficient.setPRI_jet_subleading_pt(Math.abs(ce
+						.getPRI_jet_subleading_pt()));
+			if (coeficient.getPRI_jet_subleading_eta() < Math.abs(ce
+					.getPRI_jet_subleading_eta()))
+				coeficient.setPRI_jet_subleading_eta(Math.abs(ce
+						.getPRI_jet_subleading_eta()));
+			if (coeficient.getPRI_jet_subleading_phi() < Math.abs(ce
+					.getPRI_jet_subleading_phi()))
+				coeficient.setPRI_jet_subleading_phi(Math.abs(ce
+						.getPRI_jet_subleading_phi()));
+			if (coeficient.getPRI_jet_all_pt() < Math.abs(ce
+					.getPRI_jet_all_pt()))
+				coeficient.setPRI_jet_all_pt(Math.abs(ce.getPRI_jet_all_pt()));
+		}
+		normalize(training, coeficient);
+
+		return coeficient;
+	}
+
+	public static ColisionEvent normalize(ArrayList<ColisionEvent> list,
+			ColisionEvent coeficient) {
+		// Applique les coeficients
+		for (ColisionEvent ce : list) {
+			ce.setDER_mass_MMC(ce.getDER_mass_MMC()
+					/ coeficient.getDER_mass_MMC());
+			ce.setDER_mass_transverse_met_lep(ce
+					.getDER_mass_transverse_met_lep()
+					/ coeficient.getDER_mass_transverse_met_lep());
+			ce.setDER_mass_vis(ce.getDER_mass_vis()
+					/ coeficient.getDER_mass_vis());
+			ce.setDER_pt_h(ce.getDER_pt_h() / coeficient.getDER_pt_h());
+			ce.setDER_deltaeta_jet_jet(ce.getDER_deltaeta_jet_jet()
+					/ coeficient.getDER_deltaeta_jet_jet());
+			ce.setDER_mass_jet_jet(ce.getDER_mass_jet_jet()
+					/ coeficient.getDER_deltaeta_jet_jet());
+			ce.setDER_prodeta_jet_jet(ce.getDER_prodeta_jet_jet()
+					/ coeficient.getDER_prodeta_jet_jet());
+			ce.setDER_deltar_tau_lep(ce.getDER_deltar_tau_lep()
+					/ coeficient.getDER_deltar_tau_lep());
+			ce.setDER_pt_tot(ce.getDER_pt_tot() / coeficient.getDER_pt_tot());
+			ce.setDER_sum_pt(ce.getDER_sum_pt() / coeficient.getDER_sum_pt());
+			ce.setDER_pt_ratio_lep_tau(ce.getDER_pt_ratio_lep_tau()
+					/ coeficient.getDER_pt_ratio_lep_tau());
+			ce.setDER_met_phi_centrality(ce.getDER_met_phi_centrality()
+					/ coeficient.getDER_met_phi_centrality());
+			ce.setDER_lep_eta_centrality(ce.getDER_lep_eta_centrality()
+					/ coeficient.getDER_lep_eta_centrality());
+			ce.setPRI_tau_pt(ce.getPRI_tau_pt() / coeficient.getPRI_tau_pt());
+			ce.setPRI_tau_eta(ce.getPRI_tau_eta() / coeficient.getPRI_tau_eta());
+			ce.setPRI_tau_phi(ce.getPRI_tau_phi() / coeficient.getPRI_tau_phi());
+			ce.setPRI_lep_pt(ce.getPRI_lep_pt() / coeficient.getPRI_lep_pt());
+			ce.setPRI_lep_eta(ce.getPRI_lep_eta() / coeficient.getPRI_lep_eta());
+			ce.setPRI_lep_phi(ce.getPRI_lep_phi() / coeficient.getPRI_lep_phi());
+			ce.setPRI_met(ce.getPRI_met() / coeficient.getPRI_met());
+			ce.setPRI_met_phi(ce.getPRI_met_phi() / coeficient.getPRI_met_phi());
+			ce.setPRI_met_sumet(ce.getPRI_met_sumet()
+					/ coeficient.getPRI_met_sumet());
+			ce.setPRI_jet_num(ce.getPRI_jet_num() / coeficient.getPRI_jet_num());
+			ce.setPRI_jet_leading_pt(ce.getPRI_jet_leading_pt()
+					/ coeficient.getPRI_jet_leading_pt());
+			ce.setPRI_jet_leading_eta(ce.getPRI_jet_leading_eta()
+					/ coeficient.getPRI_jet_leading_eta());
+			ce.setPRI_jet_leading_phi(ce.getPRI_jet_leading_phi()
+					/ coeficient.getPRI_jet_leading_phi());
+			ce.setPRI_jet_subleading_pt(ce.getPRI_jet_subleading_pt()
+					/ coeficient.getPRI_jet_subleading_pt());
+			ce.setPRI_jet_subleading_eta(ce.getPRI_jet_subleading_eta()
+					/ coeficient.getPRI_jet_subleading_eta());
+			ce.setPRI_jet_subleading_phi(ce.getPRI_jet_subleading_phi()
+					/ coeficient.getPRI_jet_subleading_phi());
+			ce.setPRI_jet_all_pt(ce.getPRI_jet_all_pt()
+					/ coeficient.getPRI_jet_all_pt());
+		}
+		return coeficient;
 	}
 }
