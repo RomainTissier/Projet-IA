@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * Class representing the Boson network Evaluation structure, it inherits from
  * Evaluation, which contains generic indicators
@@ -5,7 +7,10 @@
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class BosonEvaluation extends Evaluation {
+public class BosonEvaluation extends Evaluation implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	private Integer infZero;
 	private Integer supOne;
 	private Integer quartOne;

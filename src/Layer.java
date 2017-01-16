@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -6,9 +7,9 @@ import java.util.ArrayList;
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class Layer extends ArrayList<Neuron> {
+public class Layer extends ArrayList<Neuron> implements Serializable {
 
-	private static final long serialVersionUID = -2623462358109851340L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Compute the value of the layer (activation function)

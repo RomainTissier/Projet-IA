@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,6 +23,24 @@ public class Main {
 
 		// Check program arguments
 		if (args.length < 3) {
+			if (args.length == 2) {
+				try {
+					ObjectInputStream flotLecture = new ObjectInputStream(
+							new FileInputStream(args[0]));
+					BosonNetwork bn = (BosonNetwork) flotLecture.readObject();
+
+					System.out.println("Test result:");
+					ColisionEventList ce = new ColisionEventList(new File(
+							args[1]));
+					normalize(ce);
+					BosonEvaluation testEvaluation = bn.check(ce);
+					System.out.println(testEvaluation.toString());
+					bn.save(new File("testout"), new BosonEvaluation());
+				} catch (IOException | ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				return;
+			}
 			System.out
 					.println("Param: <learning_coeficient> <passes> <training.csv> <size input> <size hidden layer 1> <size hidden layer 2> [...] <size hidden layer n> <size output>");
 			System.out
@@ -58,9 +79,16 @@ public class Main {
 
 		// Train the network
 		for (int i = 0; i < nb_passes; i++) {
-			System.out.print("Learning pass " + (i + 1) + "... ");
-			bosonNetwork.train(training, learningCoeficient);
+			System.out.print("Learning pass " + (i + 1) + "... \n");
+			bosonNetwork.train_algo2(training, learningCoeficient);
 			System.out.println("[OK]");
+			System.out.println("Learning result:");
+			BosonEvaluation learningEvaluation = bosonNetwork.check(training);
+			System.out.println(learningEvaluation.toString());
+
+			System.out.println("Test result:");
+			BosonEvaluation testEvaluation = bosonNetwork.check(test);
+			System.out.println(testEvaluation.toString());
 		}
 
 		// Compute performance
@@ -73,18 +101,29 @@ public class Main {
 		BosonEvaluation testEvaluation = bosonNetwork.check(test);
 		System.out.println(testEvaluation.toString());
 
+		System.out.println("YOLO:");
+		normalize(cel);
+		BosonEvaluation be = bosonNetwork.check(cel);
+		System.out.println(be.toString());
 		// Ask user a JSON save
-		System.out.println("Would you like to save in result in JSON ?");
+		System.out.println("Would you like to save this result ?");
 		Scanner sc = new Scanner(System.in);
 		String ans = sc.next();
 		if (ans.startsWith("y") || ans.startsWith("Y")) {
 			System.out.println("Name the new outputfile:");
 			ans = sc.next();
-			bosonNetwork.toJSON(new File(ans), testEvaluation);
+			bosonNetwork.save(new File(ans), testEvaluation);
 		}
 		sc.close();
 	}
 
+	/**
+	 * Compute coeficient and normalize data
+	 * 
+	 * @param training
+	 *            training set
+	 * @return coeficients
+	 */
 	public static ColisionEvent normalize(ArrayList<ColisionEvent> training) {
 		ColisionEvent coeficient = new ColisionEvent();
 		coeficient.setDER_mass_MMC(0.0);
@@ -214,8 +253,18 @@ public class Main {
 		return coeficient;
 	}
 
+	/**
+	 * Normalize data using given parameters
+	 * 
+	 * @param list
+	 *            dataset to normalize
+	 * @param coeficient
+	 *            use for normalizing
+	 * @return coeficient
+	 */
 	public static ColisionEvent normalize(ArrayList<ColisionEvent> list,
 			ColisionEvent coeficient) {
+
 		// Applique les coeficients
 		for (ColisionEvent ce : list) {
 			ce.setDER_mass_MMC(ce.getDER_mass_MMC()

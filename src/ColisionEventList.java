@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,9 +11,10 @@ import java.util.ArrayList;
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class ColisionEventList extends ArrayList<ColisionEvent> {
+public class ColisionEventList extends ArrayList<ColisionEvent> implements
+		Serializable {
 
-	private static final long serialVersionUID = 7886459674222557917L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor loading a data set from a CSV file

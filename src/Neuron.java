@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -6,7 +7,7 @@ import java.util.ArrayList;
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class Neuron {
+public class Neuron implements Serializable {
 	private ArrayList<Link> inputs;
 	private ArrayList<Link> outputs;
 	private Double gradient;

@@ -1,10 +1,14 @@
+import java.io.Serializable;
+
 /**
  * Class representing a Link between two neuron
  * 
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class Link {
+public class Link implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Double weight;
 	private Neuron origin;
 	private Neuron destination;
@@ -13,7 +17,7 @@ public class Link {
 	 * Constructor initializing a link with a random weight within -1 and 1
 	 */
 	public Link() {
-		weight = Math.random() * 2 - 1;
+		weight = Math.random();// * 2 - 1;
 	}
 
 	/**

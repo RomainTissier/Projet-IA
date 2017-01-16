@@ -1,6 +1,7 @@
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,10 @@ import java.util.ArrayList;
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  */
 public class BosonNetwork extends Network {
+
+	private static final long serialVersionUID = 1L;
 	final Double seuil = 0.5;
+	private final Double trainingCoef = 0.80;
 
 	/**
 	 * Constructor initializing the Boson
@@ -21,14 +25,14 @@ public class BosonNetwork extends Network {
 	}
 
 	/**
-	 * Method training the boson network
+	 * Method training the boson network with a "brut force" algorithm
 	 * 
 	 * @param dataset
 	 *            inputs training data
 	 * @param learningCoeficient
 	 *            learning coefficient to apply for back propagation
 	 */
-	public void train(ArrayList<ColisionEvent> dataset,
+	public void train_algo2(ArrayList<ColisionEvent> dataset,
 			Double learningCoeficient) {
 		ArrayList<ColisionEvent> traitedData = new ArrayList<ColisionEvent>();
 
@@ -49,10 +53,59 @@ public class BosonNetwork extends Network {
 				wantedOutput.add(0.0);
 
 			// Train the network by using the inherited train method
-			this.train(inputs.toVector(), wantedOutput, learningCoeficient);
+			super.train(inputs.toVector(), wantedOutput, learningCoeficient);
+
+			traitedData.add(inputs);
+
+			BosonEvaluation eval;
+			eval = this.check(traitedData);
+			while (eval.getTauxBonneClassification() < trainingCoef) {
+				eval = this.check(traitedData);
+				train_algo1(traitedData, learningCoeficient);
+			}
 
 			// Add the event to the trained data list
+			dataset.remove(i);
+			System.out.println((double) traitedData.size()
+					/ ((double) (dataset.size() + traitedData.size())));
+		}
+
+		// Restore the original data set
+		dataset.addAll(traitedData);
+	}
+
+	/**
+	 * Method training the network with the classical algorithm
+	 * 
+	 * @param dataset
+	 * @param learningCoeficient
+	 */
+	public void train_algo1(ArrayList<ColisionEvent> dataset,
+			Double learningCoeficient) {
+		ArrayList<ColisionEvent> traitedData = new ArrayList<ColisionEvent>();
+
+		// Load inputs from event and train the network
+		int i;
+		ColisionEvent inputs;
+		while (dataset.size() > 0) {
+
+			// Get a random element in the data set
+			i = (int) (Math.random() * dataset.size());
+			inputs = dataset.get(i);
+
+			// Determine the wanted output value
+			ArrayList<Double> wantedOutput = new ArrayList<Double>();
+			if (inputs.getInterest())
+				wantedOutput.add(1.0);
+			else
+				wantedOutput.add(0.0);
+
+			// Train the network by using the inherited train method
+			super.train(inputs.toVector(), wantedOutput, learningCoeficient);
+
 			traitedData.add(inputs);
+
+			// Add the event to the trained data list
 			dataset.remove(i);
 		}
 
@@ -111,56 +164,16 @@ public class BosonNetwork extends Network {
 	 * @param bosonEvaluation
 	 *            evaluation of the boson network
 	 */
-	public void toJSON(File jsonFile, BosonEvaluation bosonEvaluation) {
+	public void save(File jsonFile, BosonEvaluation bosonEvaluation) {
 		try {
-
-			// if the JSON file already exist, erase it
 			if (jsonFile.exists())
 				jsonFile.delete();
 			jsonFile.createNewFile();
 
-			FileWriter jsonWriter;
-			jsonWriter = new FileWriter(jsonFile);
-			jsonWriter.write("{\n");
-
-			// Write confusion matrix
-			jsonWriter.write("\tTP:\"" + bosonEvaluation.getTruePositive()
-					+ "\"\n");
-			jsonWriter.write("\tTN:\"" + bosonEvaluation.getTrueNegative()
-					+ "\"\n");
-			jsonWriter.write("\tFP:\"" + bosonEvaluation.getFalsePositive()
-					+ "\"\n");
-			jsonWriter.write("\tFN:\"" + bosonEvaluation.getFalseNegative()
-					+ "\"\n");
-
-			// Write layers list
-			jsonWriter.write("\tlayers:[\n");
-			for (Layer layer : layers) {
-
-				jsonWriter.write("\t\tlayer:{\n");
-				for (Neuron neuron : layer) {
-
-					// Write neuron by neuron
-					jsonWriter.write("\t\t\tneuron:{\n");
-
-					// Write input and output weights
-					jsonWriter.write("\t\t\t\tinputs:[\n");
-					for (Link link : neuron.getInputs())
-						jsonWriter.write("\t\t\t\t\t\"" + link.getWeight()
-								+ "\"\n");
-					jsonWriter.write("\t\t\t\t]\n");
-					jsonWriter.write("\t\t\t\toutputs:[\n");
-					for (Link link : neuron.getOutputs())
-						jsonWriter.write("\t\t\t\t\t\"" + link.getWeight()
-								+ "\"\n");
-					jsonWriter.write("\t\t\t\t]\n");
-					jsonWriter.write("\t\t\t}\n");
-				}
-				jsonWriter.write("\t\t}\n");
-			}
-			jsonWriter.write("\t]\n");
-			jsonWriter.write("}\n");
-			jsonWriter.close();
+			ObjectOutputStream flotEcriture = new ObjectOutputStream(
+					new FileOutputStream(jsonFile));
+			flotEcriture.writeObject(this);
+			flotEcriture.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

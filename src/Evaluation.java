@@ -1,10 +1,14 @@
+import java.io.Serializable;
+
 /**
  * Structure representing the evaluation of a network by embedding indicators
  * 
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class Evaluation {
+public class Evaluation implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Integer truePositive;
 	private Integer trueNegative;
 	private Integer falsePositive;
@@ -18,6 +22,16 @@ public class Evaluation {
 		trueNegative = 0;
 		falsePositive = 0;
 		falseNegative = 0;
+	}
+
+	/**
+	 * Retourne le taux de bonne classification
+	 * 
+	 * @return taux de bonne classification
+	 */
+	public Double getTauxBonneClassification() {
+		return (double) (truePositive + trueNegative)
+				/ ((double) (truePositive + trueNegative + falsePositive + falseNegative));
 	}
 
 	/**

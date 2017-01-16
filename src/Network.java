@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -6,8 +7,19 @@ import java.util.ArrayList;
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class Network {
+public class Network implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	protected ArrayList<Layer> layers;
+
+	/**
+	 * Method returning the Layers list
+	 * 
+	 * @return layers list
+	 */
+	public ArrayList<Layer> getLayers() {
+		return layers;
+	}
 
 	/**
 	 * Constructor initializing a neural network

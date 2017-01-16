@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -6,7 +7,9 @@ import java.util.ArrayList;
  * @authors Cuartero Jean-Louis, Delpech Marc, Tissier Romain
  * 
  */
-public class ColisionEvent {
+public class ColisionEvent implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Double DER_mass_MMC;
 	private Double DER_mass_transverse_met_lep;
 	private Double DER_mass_vis;
